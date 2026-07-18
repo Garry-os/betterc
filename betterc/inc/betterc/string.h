@@ -14,3 +14,4 @@ String string_clone(const String* src);
 void string_append(String* string, const char* content);
 bool string_compare(const String* a, const String* b);
 void string_clear(String* string);
+char string_at(const String* string, usize index);

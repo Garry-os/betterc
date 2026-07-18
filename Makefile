@@ -8,8 +8,10 @@ ARFLAGS = -rcs
 C_SRC := $(shell find betterc/lib -type f -name "*.c")
 C_OBJ := $(patsubst betterc/lib/%.c, build/lib/%.o, $(C_SRC))
 
-TEST_SRC := src/test_string.c
-TEST_BIN := build/test_string
+TEST_SRC := src/test_string.c \
+			src/test_vector.c
+TEST_BIN := build/test_string \
+			build/test_vector
 
 all: dirs build/libbetterc.a $(TEST_BIN)
 build/libbetterc.a: $(C_OBJ)

@@ -46,7 +46,8 @@ String string_new(const char* content) {
 }
 
 void string_free(String* string) {
-    free(string->data);
+    if (string->data)
+        free(string->data);
     string->data = 0;
     string->size = 0;
 }
@@ -98,4 +99,8 @@ void string_clear(String* string) {
     // Reset the data
     memset(string->data, 0, string->size);
     string->size = 0;
+}
+
+char string_at(const String* string, usize index) {
+    return string->data[index];
 }
