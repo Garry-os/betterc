@@ -7,7 +7,7 @@ int main() {
         vector_push(&buffer, &i);
 
     for (usize i = 0; i < buffer.size; i++)
-        printf("%d\n", *(int*)vector_get(&buffer, i));
+        printf("%d\n", vector_getv(int, &buffer, i));
 
     return 0;
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "types.h"
 
+#define vector_getv(type, buffer, index) (*(type*)vector_get(buffer, index))
+
 typedef struct {
     void* data;
     usize size;
