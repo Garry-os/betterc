@@ -1,5 +1,6 @@
 #include <betterc/string.h>
 #include <stdlib.h>
+#include <string.h>
 
 static usize bc_strlen(const char* string) {
     usize len = 0;
@@ -19,6 +20,15 @@ static void bc_strcpy(char* dst, const char* src) {
     }
 
     *dst = '\0';
+}
+
+static int bc_strcmp(const char* a, const char* b) {
+    while (*a && *b && *a == *b) {
+        a++;
+        b++;
+    }
+
+    return (*a) - (*b);
 }
 
 String string_new(const char* content) {
@@ -45,7 +55,7 @@ void string_append(String* string, const char* content) {
     // Calculate the needed size
     usize contentSize = bc_strlen(content);
     usize originalSize = string->size;
-    char* data = realloc(string->data, originalSize + contentSize + 1);
+    char* data = (char*)realloc(string->data, originalSize + contentSize + 1);
     if (!data) {
         return;
     }
@@ -53,4 +63,39 @@ void string_append(String* string, const char* content) {
     string->size = originalSize + contentSize;
     // Copy over the string
     bc_strcpy(data + originalSize, content);
+}
+
+String string_clone(const String* src) {
+    String target;
+    // Allocate memory
+    usize srcSize = src->size;
+    char* data = (char*)malloc(srcSize + 1);
+    if (!data) {
+        return (String){ 0, 0 };
+    }
+    target.data = data;
+    target.size = srcSize;
+
+    // Copy over the data
+    bc_strcpy(target.data, src->data);
+
+    return target;
+}
+
+// Returns true if equal
+// otherwise false
+bool string_compare(const String* a, const String* b) {
+    if (bc_strcmp(a->data, b->data) == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+// Clear the whole string's buffer
+// Also resets the size to 0
+void string_clear(String* string) {
+    // Reset the data
+    memset(string->data, 0, string->size);
+    string->size = 0;
 }
