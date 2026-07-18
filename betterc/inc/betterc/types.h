@@ -1,5 +1,6 @@
 #pragma once
 #include "architecture.h"
+#include <stdbool.h>
 
 // Unsigned
 typedef unsigned char u8;
@@ -21,3 +22,6 @@ typedef i64 isize;
 typedef i32 usize;
 typedef i64 usize;
 #endif
+
+// Unused
+#define UNUSED(x) ((void)x)
