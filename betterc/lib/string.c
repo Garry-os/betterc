@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DEFAULT_CHARS_ALLOC (16)
+
 static usize bc_strlen(const char* string) {
     usize len = 0;
     while (*string) {
@@ -31,16 +33,34 @@ static int bc_strcmp(const char* a, const char* b) {
     return (*a) - (*b);
 }
 
+// Expand the string array's capacity using realloc()
+// The capacity will be calculated by string->capacity + growthAmount
+static void expand_string_array(String* string, usize growthAmount) {
+    // Only expands if needed
+    if (string->size + growthAmount < string->capacity)
+        return;
+
+    char* data = (char*)realloc(string->data, string->capacity + growthAmount);
+    if (!data) {
+        return;
+    }
+    // Update variables
+    string->data = data;
+    string->capacity += growthAmount;
+}
+
 String string_new(const char* content) {
     String string;
     // Allocate memory
-    char* data = (char*)malloc(bc_strlen(content) + 1);
+    usize contentSize = bc_strlen(content);
+    char* data = (char*)malloc(contentSize + 1);
     if (!data) {
-        return (String){ NULL, 0 };
+        return (String){ NULL, 0, 0 };
     }
     bc_strcpy(data, content);
     string.data = data;
-    string.size = bc_strlen(content);
+    string.size = contentSize;
+    string.capacity = contentSize;
 
     return string;
 }
@@ -50,20 +70,18 @@ void string_free(String* string) {
         free(string->data);
     string->data = 0;
     string->size = 0;
+    string->capacity = 0;
 }
 
 void string_append(String* string, const char* content) {
-    // Calculate the needed size
+    // Calculate needed size
     usize contentSize = bc_strlen(content);
     usize originalSize = string->size;
-    char* data = (char*)realloc(string->data, originalSize + contentSize + 1);
-    if (!data) {
-        return;
-    }
-    string->data = data;
-    string->size = originalSize + contentSize;
+    // Expand the string
+    expand_string_array(string, contentSize + 1 + DEFAULT_CHARS_ALLOC);
+    string->size += contentSize; // Leave out some spaces
     // Copy over the string
-    bc_strcpy(data + originalSize, content);
+    bc_strcpy(string->data + originalSize, content);
 }
 
 String string_clone(const String* src) {
@@ -72,7 +90,7 @@ String string_clone(const String* src) {
     usize srcSize = src->size;
     char* data = (char*)malloc(srcSize + 1);
     if (!data) {
-        return (String){ 0, 0 };
+        return (String){ 0, 0, 0 };
     }
     target.data = data;
     target.size = srcSize;
@@ -103,4 +121,10 @@ void string_clear(String* string) {
 
 char string_at(const String* string, usize index) {
     return string->data[index];
+}
+
+void string_reserve(String* string, usize newCapacity) {
+    if (newCapacity < string->size)
+        return;
+    expand_string_array(string, newCapacity);
 }
