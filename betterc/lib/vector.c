@@ -43,7 +43,7 @@ static void grow_buffer(Vector* buffer) {
     buffer->data = data;
 }
 
-void vector_push(Vector* buffer, const void* content) {
+void vector_push_impl(Vector* buffer, const void* content) {
     grow_buffer(buffer);
     memcpy((u8*)buffer->data + buffer->size * buffer->elementSize, content, buffer->elementSize);
     buffer->size += 1;
@@ -55,4 +55,45 @@ void* vector_get(Vector* buffer, usize index) {
         return NULL;
 
     return (void*)((u8*)buffer->data + index * buffer->elementSize);
+}
+
+void vector_pushfloat(Vector* buffer, float value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushdouble(Vector* buffer, double value) {
+    vector_push_impl(buffer, &value);
+}
+
+// Unsigned integers
+void vector_pushu8(Vector* buffer, u8 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushu16(Vector* buffer, u16 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushu32(Vector* buffer, u32 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushu64(Vector* buffer, u64 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushi8(Vector* buffer, i8 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushi16(Vector* buffer, i16 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushi32(Vector* buffer, i32 value) {
+    vector_push_impl(buffer, &value);
+}
+
+void vector_pushi64(Vector* buffer, i64 value) {
+    vector_push_impl(buffer, &value);
 }

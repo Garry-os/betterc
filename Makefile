@@ -7,6 +7,7 @@ ARFLAGS = -rcs
 
 C_SRC := $(shell find betterc/lib -type f -name "*.c")
 C_OBJ := $(patsubst betterc/lib/%.c, build/lib/%.o, $(C_SRC))
+C_HDR := $(shell find betterc/lib -type f -name "*.h")
 
 TEST_SRC := src/test_string.c \
 			src/test_vector.c
@@ -17,7 +18,7 @@ all: dirs build/libbetterc.a $(TEST_BIN)
 build/libbetterc.a: $(C_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
 
-build/lib/%.o: betterc/lib/%.c
+build/lib/%.o: betterc/lib/%.c $(C_HDR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 build/%: tests/%.c build/libbetterc.a
