@@ -84,6 +84,15 @@ void string_append(String* string, const char* content) {
     bc_strcpy(string->data + originalSize, content);
 }
 
+void string_append_count(String* string, const char* content, usize count) {
+    usize originalSize = string->size;
+
+    expand_string_array(string, count + DEFAULT_CHARS_ALLOC);
+    string->size += count;
+
+    bc_strcpy(string->data + originalSize, content);
+}
+
 String string_clone(const String* src) {
     String target;
     // Allocate memory

@@ -9,10 +9,12 @@ C_SRC := $(shell find betterc/lib -type f -name "*.c")
 C_OBJ := $(patsubst betterc/lib/%.c, build/lib/%.o, $(C_SRC))
 C_HDR := $(shell find betterc/lib -type f -name "*.h")
 
-TEST_SRC := src/test_string.c \
-			src/test_vector.c
+TEST_SRC := tests/test_string.c \
+			tests/test_vector.c \
+			tests/test_format.c
 TEST_BIN := build/test_string \
-			build/test_vector
+			build/test_vector \
+			build/test_format
 
 all: dirs build/libbetterc.a $(TEST_BIN)
 build/libbetterc.a: $(C_OBJ)
