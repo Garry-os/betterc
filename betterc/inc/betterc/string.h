@@ -1,6 +1,10 @@
 #pragma once
 #include "types.h"
 
+// Fast string creation
+// Stack-allocated
+#define str(content) ((String){ content, sizeof(content), sizeof(content) })
+
 typedef struct {
     char* data;
     usize size; // Does not contain the NULL terminator

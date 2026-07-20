@@ -34,5 +34,9 @@ int main() {
     string_free(&string);
     string_free(&stringClone);
 
+    // Stack allocated string
+    String stackAllocated = str("This is a stack allocated string.");
+    printf("%s\n", stackAllocated.data);
+
     return 0;
 }
