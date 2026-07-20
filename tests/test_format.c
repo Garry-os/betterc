@@ -2,10 +2,11 @@
 #include <stdio.h>
 
 int main() {
-    FormatArg args[] = { {.type = FORMAT_FLOAT, .value.float_value = 0.5f} };
-    usize argCount = 1;
+    String testString = str("Real string btw.");
+    FormatArg args[] = { {.type = FORMAT_POINTER, .value.pointer_value = (void*)0xDEADBEEF}, {.type = FORMAT_STRING, .value.string_value = testString} };
+    usize argCount = 2;
 
-    String string = format_impl("Float: {}", args, argCount);
+    String string = format_impl("String: {} {}", args, argCount);
     printf("%s\n", string.data);
 
     return 0;

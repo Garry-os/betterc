@@ -4,7 +4,7 @@
 #if defined(_GNUC)
 #define BETTERC_COMPILER_GCC
 #elif defined(__clang__)
-#define BETTERC_COMPILE_CLANG
+#define BETTERC_COMPILER_CLANG
 #elif defined(_MSC_VER)
 #define BETTERC_COMPILER_MSVC
 #endif
