@@ -10,7 +10,6 @@ int main() {
     float value = 0.5f;
     vector_push(&buffer, &value);
 
-
     for (usize i = 0; i < buffer.size; i++)
         printf("%f\n", vector_getv(float, &buffer, i));
 

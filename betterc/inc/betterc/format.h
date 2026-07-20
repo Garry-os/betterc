@@ -21,9 +21,9 @@ typedef struct {
         u64 unsigned_value;
         i64 signed_value;
         bool boolean_value;
-        char* cstring_value;
+        const char* cstring_value;
         String string_value;
-        void* pointer_value;
+        const void* pointer_value;
     } value;
 } FormatArg;
 
@@ -31,9 +31,45 @@ typedef struct {
 static inline FormatArg format_arg_float(float value) {
     return (FormatArg){ .type = FORMAT_FLOAT, .value.float_value = value };
 }
+static inline FormatArg format_arg_double(double value) {
+    return (FormatArg){ .type = FORMAT_DOUBLE, .value.double_value = value };
+}
+static inline FormatArg format_arg_unsigned(u64 value) {
+    return (FormatArg){ .type = FORMAT_UNSIGNED, .value.unsigned_value = value };
+}
+static inline FormatArg format_arg_signed(u64 value) {
+    return (FormatArg){ .type = FORMAT_SIGNED, .value.signed_value = value };
+}
+static inline FormatArg format_arg_boolean(bool value) {
+    return (FormatArg){ .type = FORMAT_BOOLEAN, .value.boolean_value = value };
+}
+static inline FormatArg format_arg_cstring(const char* value) {
+    return (FormatArg){ .type = FORMAT_CSTRING, .value.cstring_value = value };
+}
+static inline FormatArg format_arg_string(String value) {
+    return (FormatArg){ .type = FORMAT_STRING, .value.string_value = value };
+}
+static inline FormatArg format_arg_pointer(const void* value) {
+    return (FormatArg){ .type = FORMAT_POINTER, .value.pointer_value = value };
+}
 
 #define _FORMAT_MAKE_ARGS(x) _Generic((x), \
-    float: format_arg_float \
+    float: format_arg_float, \
+    double: format_arg_double, \
+    u8: format_arg_unsigned, \
+    u16: format_arg_unsigned, \
+    u32: format_arg_unsigned, \
+    u64: format_arg_unsigned, \
+    i8: format_arg_signed, \
+    i16: format_arg_signed, \
+    i32: format_arg_signed, \
+    i64: format_arg_signed, \
+    bool: format_arg_boolean, \
+    char*: format_arg_cstring, \
+    const char*: format_arg_cstring, \
+    String: format_arg_string, \
+    void*: format_arg_pointer, \
+    const void*: format_arg_pointer \
 )(x)
 
 #define _FORMAT_NUM_ARGS_(_unused, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, \
