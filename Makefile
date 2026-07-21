@@ -1,4 +1,4 @@
-.PHONY: all clean dirs
+.PHONY: all clean dirs install
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -O2 -std=c23 -I betterc/inc/
 
@@ -8,6 +8,8 @@ ARFLAGS = -rcs
 C_SRC := $(shell find betterc/lib -type f -name "*.c")
 C_OBJ := $(patsubst betterc/lib/%.c, build/lib/%.o, $(C_SRC))
 C_HDR := $(shell find betterc/lib -type f -name "*.h")
+
+PREFIX ?= /usr/local
 
 TEST_SRC := tests/test_string.c \
 			tests/test_vector.c \
@@ -29,6 +31,13 @@ build/%: tests/%.c build/libbetterc.a
 dirs:
 	@ mkdir -p build
 	@ mkdir -p build/lib
+
+install:
+	mkdir -p $(PREFIX)/include/
+	mkdir -p $(PREFIX)/lib/
+
+	cp -r betterc/inc/* $(PREFIX)/include/
+	cp -r build/libbetterc.a $(PREFIX)/lib/
 
 clean:
 	rm -rf build/
