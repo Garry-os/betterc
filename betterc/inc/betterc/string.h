@@ -19,9 +19,15 @@ void string_free(String* string);
 
 // Methods
 String string_clone(const String* src);
+
 void string_append(String* string, const char* content);
 void string_append_count(String* string, const char* content, usize count);
+void string_reserve(String* string, usize newCapacity);
+
 bool string_compare(const String* a, const String* b);
 void string_clear(String* string);
+
+bool string_contains(const String* string, const char* target);
+
 char string_at(const String* string, usize index);
-void string_reserve(String* string, usize newCapacity);
+

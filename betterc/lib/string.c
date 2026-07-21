@@ -24,6 +24,19 @@ static void bc_strcpy(char* dst, const char* src) {
     *dst = '\0';
 }
 
+static int bc_strncmp(const char* a, const char* b, usize count) {
+    if (count == 0) return 0;
+
+    usize i = 1;
+    while (*a && *b && *a == *b && i < count) {
+        a++;
+        b++;
+        i++;
+    }
+
+    return (*a) - (*b);
+}
+
 static int bc_strcmp(const char* a, const char* b) {
     while (*a && *b && *a == *b) {
         a++;
@@ -137,3 +150,19 @@ void string_reserve(String* string, usize newCapacity) {
         return;
     expand_string_array(string, newCapacity);
 }
+
+bool string_contains(const String* string, const char* target) {
+    usize targetLen = bc_strlen(target);
+    for (usize i = 0; i < string->size; i++) {
+        if (string_at(string, i) != target[0])
+            continue;
+
+        // Continue checking
+        if (bc_strncmp(&string->data[i], target, targetLen) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+

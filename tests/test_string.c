@@ -38,5 +38,12 @@ int main() {
     String stackAllocated = str("This is a stack allocated string.");
     printf("%s\n", stackAllocated.data);
 
+    // Contains method
+    String targetString = string_new("hello.glsl");
+    if (string_contains(&targetString, ".glsl"))
+        printf("targetString contains .glsl\n");
+    else
+        printf("targetString DOES NOT contain .glsl\n");
+
     return 0;
 }
