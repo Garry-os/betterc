@@ -13,11 +13,11 @@ int main() {
     usize fileSize = file_size(handle);
     char buffer[64];
     result = file_read(handle, fileSize, buffer);
-    if (result != FS_RESULT_SUCCESS)
+    if (result != FS_RESULT_SUCCESS) {
         eprintln("Error: {}", fs_result_to_string(result));
         return -1;
     }
-    // println("File content: {}\n", buffer);
+
     for (usize i = 0; i < fileSize; i++) {
         putchar(buffer[i]);
     }
