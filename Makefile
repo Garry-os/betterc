@@ -13,10 +13,12 @@ PREFIX ?= /usr/local
 
 TEST_SRC := tests/test_string.c \
 			tests/test_vector.c \
-			tests/test_format.c
+			tests/test_format.c \
+			tests/test_fileapi.c
 TEST_BIN := build/test_string \
 			build/test_vector \
-			build/test_format
+			build/test_format \
+			build/test_fileapi
 
 all: dirs build/libbetterc.a $(TEST_BIN)
 build/libbetterc.a: $(C_OBJ)
