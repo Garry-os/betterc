@@ -46,9 +46,6 @@ const char* fs_result_to_string(FS_RESULT result) {
     }
 }
 
-// Open a file
-// The handle will be allocated in this function
-// The path is relative to the current working directory (CWD)
 FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes) {
     // Allocate memory for file handle
     *handle = (FileHandle*)malloc(sizeof(FileHandle));
