@@ -76,6 +76,11 @@ FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes, FileF
     }
 
     const char* attribs = modes_to_c_attribs(modes);
+    if (!attribs) {
+        // Invalid attributes
+        return FS_RESULT_INVALID;
+    }
+
     FILE* file = fopen(path, attribs);
     if (!file) {
         // Free the handle
