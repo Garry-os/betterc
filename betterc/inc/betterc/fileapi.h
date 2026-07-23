@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <betterc/types.h>
 
+#define BIT(x) (1 << x)
+
 // Used for both fileapi.h and fsapi.h
 typedef enum {
     FS_RESULT_SUCCESS = 0,  // Success
@@ -16,17 +18,39 @@ typedef enum {
     FS_RESULT_UNKNOWN,      // Unknown error
 } FS_RESULT;
 
-// Bitmask
-// File attributes can be OR to combine
-// For example FILE_MODE_READ | FILE_MODE_WRITE = RW
+/**
+ * @brief File access modes for opening files.
+ */
 typedef enum {
-    FILE_MODE_READ =   (1 << 0),
-    FILE_MODE_WRITE =  (1 << 1),
-    FILE_MODE_BINARY = (1 << 2)
+    /** Open for read mode. */
+    FILE_MODE_READ      = BIT(0),
+
+    /** Open for write mode. */
+    FILE_MODE_WRITE     = BIT(1),
+
+    /** Open using binary mode. */
+    FILE_MODE_BINARY    = BIT(2),
+
+    /** Append all writes to the end of the file. */
+    FILE_MODE_APPEND    = BIT(3),
 } FileMode;
 
+/**
+ * @brief File opening flags for opening files.
+ */
+typedef enum {
+    /** Create a file if it doesn't exist. */
+    FILE_FLAG_CREATE = BIT(0),
+} FileFlags;
+
+/**
+ * @brief Represents a file.
+ */
 typedef struct {
+    /** File access modes. */
     FileMode modes;
+
+    /** The FILE* handle. User should NOT modify handle. */
     FILE* handle;
 } FileHandle;
 
@@ -41,12 +65,15 @@ const char* fs_result_to_string(FS_RESULT result);
 /**
  * @brief Opens a file.
  *
+ * @note File flags can't be standalone, they need to be paired with modes.
+ *
  * @param[out] handle The file handle received on success.
  * @param[in] path Path to the file.
  * @param[in] modes Access modes to the file.
+ * @param[in] flags File flags.
  * @return FS_RESULT_SUCCESS on success, otherwise an error code.
  */
-FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes);
+FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes, FileFlags flags);
 
 /**
  * @brief Reads a file.

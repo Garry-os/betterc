@@ -2,14 +2,19 @@
 #include <betterc/string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <betterc/platform.h>
 
-static const char* file_attrib_lookup[16] = {
-    [FILE_MODE_READ]                    =                   "r",
-    [FILE_MODE_READ | FILE_MODE_WRITE]  =                   "r+",
+static const char* file_attrib_lookup[] = {
+    [FILE_MODE_READ]                    = "r",
+    [FILE_MODE_READ | FILE_MODE_WRITE]  = "r+",
+    [FILE_MODE_APPEND]                  = "a",
+    [FILE_MODE_APPEND | FILE_MODE_READ] = "a+",
 
     // Binary modes
-    [FILE_MODE_READ | FILE_MODE_BINARY] =                   "rb",
-    [FILE_MODE_WRITE | FILE_MODE_READ | FILE_MODE_BINARY] = "rb+"
+    [FILE_MODE_READ | FILE_MODE_BINARY]                     = "rb",
+    [FILE_MODE_WRITE | FILE_MODE_READ | FILE_MODE_BINARY]   = "rb+",
+    [FILE_MODE_APPEND | FILE_MODE_BINARY]                   = "ab",
+    [FILE_MODE_APPEND | FILE_MODE_READ  | FILE_MODE_BINARY] = "ab+"
 };
 
 const char* modes_to_c_attribs(FileMode modes) {
@@ -46,7 +51,24 @@ const char* fs_result_to_string(FS_RESULT result) {
     }
 }
 
-FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes) {
+static inline bool check_file_existence(const char* path) {
+    return access(path, F_OK) == 0;
+}
+
+FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes, FileFlags flags) {
+    // Check for file's existence
+    // Create a file if CREATE flag is set
+    if (!check_file_existence(path)) {
+        if ((flags & FILE_FLAG_CREATE) != 0) {
+            // Create the file
+            FILE* tmp_file = fopen(path, "w");
+            fclose(tmp_file);
+        }
+        else {
+            return FS_RESULT_NOT_FOUND;
+        }
+    }
+
     // Allocate memory for file handle
     *handle = (FileHandle*)malloc(sizeof(FileHandle));
     if (*handle == NULL) {
@@ -62,6 +84,7 @@ FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes) {
         return errno_to_fs_result();
     }
     (*handle)->handle = file;
+    (*handle)->modes = modes;
 
     return FS_RESULT_SUCCESS;
 }
@@ -69,6 +92,9 @@ FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes) {
 // Read the content of the file one bytes each
 FS_RESULT file_read(FileHandle* handle, usize readSize, void* buffer) {
     if (!handle) {
+        return FS_RESULT_INVALID;
+    }
+    if ((handle->modes & FILE_MODE_READ) == 0) {
         return FS_RESULT_INVALID;
     }
 

@@ -4,7 +4,7 @@
 int main() {
     // Open a file
     FileHandle* handle = NULL;
-    FS_RESULT result = file_open(&handle, "test_file.txt", FILE_MODE_READ);
+    FS_RESULT result = file_open(&handle, "test_file.txt", FILE_MODE_READ, 0);
     if (result != FS_RESULT_SUCCESS) {
         eprintln("Error: {}", fs_result_to_string(result));
         return -1;
@@ -23,6 +23,16 @@ int main() {
     }
 
     file_close(&handle);
+
+    // Test creating a file
+    FileHandle* createHandle = NULL;
+    result = file_open(&createHandle, "test_create.txt", FILE_MODE_READ, FILE_FLAG_CREATE);
+    if (result != FS_RESULT_SUCCESS) {
+        eprintln("Error: {}", fs_result_to_string(result));
+        return -1;
+    }
+
+    file_close(&createHandle);
 
     return 0;
 }
