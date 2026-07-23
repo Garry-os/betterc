@@ -35,11 +35,9 @@ dirs:
 	@ mkdir -p build/lib
 
 install:
-	mkdir -p $(PREFIX)/include/
-	mkdir -p $(PREFIX)/lib/
-
-	cp -r betterc/inc/* $(PREFIX)/include/
-	cp -r build/libbetterc.a $(PREFIX)/lib/
+	install -d $(PREFIX)/include/betterc $(PREFIX)/lib/
+	install -m 644 -t $(PREFIX)/include/betterc betterc/inc/betterc/*.h
+	install -m 644 build/libbetterc.a $(PREFIX)/lib
 
 clean:
 	rm -rf build/
