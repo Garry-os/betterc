@@ -6,12 +6,14 @@
 
 static const char* file_attrib_lookup[] = {
     [FILE_MODE_READ]                    = "r",
+    [FILE_MODE_WRITE]                   = "r+",
     [FILE_MODE_READ | FILE_MODE_WRITE]  = "r+",
     [FILE_MODE_APPEND]                  = "a",
     [FILE_MODE_APPEND | FILE_MODE_READ] = "a+",
 
     // Binary modes
     [FILE_MODE_READ | FILE_MODE_BINARY]                     = "rb",
+    [FILE_MODE_WRITE | FILE_MODE_BINARY]                    = "rb+",
     [FILE_MODE_WRITE | FILE_MODE_READ | FILE_MODE_BINARY]   = "rb+",
     [FILE_MODE_APPEND | FILE_MODE_BINARY]                   = "ab",
     [FILE_MODE_APPEND | FILE_MODE_READ  | FILE_MODE_BINARY] = "ab+"
@@ -96,12 +98,10 @@ FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes, FileF
 
 // Read the content of the file one bytes each
 FS_RESULT file_read(FileHandle* handle, usize readSize, void* buffer) {
-    if (!handle) {
+    if (!handle)
         return FS_RESULT_INVALID;
-    }
-    if ((handle->modes & FILE_MODE_READ) == 0) {
+    if ((handle->modes & FILE_MODE_READ) == 0)
         return FS_RESULT_INVALID;
-    }
 
     usize sizeRead = fread(buffer, 1, readSize, handle->handle);
     if(sizeRead != readSize) {
@@ -115,6 +115,20 @@ FS_RESULT file_read(FileHandle* handle, usize readSize, void* buffer) {
             return FS_RESULT_UNKNOWN;
         }
     }
+
+    return FS_RESULT_SUCCESS;
+}
+
+FS_RESULT file_write(FileHandle* handle, usize writeSize, void* buffer) {
+    // Handle invalid cases
+    if (!handle)
+        return FS_RESULT_INVALID;
+    if ((handle->modes & FILE_MODE_WRITE) == 0 && (handle->modes & FILE_MODE_APPEND) == 0)
+        return FS_RESULT_INVALID;
+
+    usize sizeWritten = fwrite(buffer, 1, writeSize, handle->handle);
+    if (sizeWritten != writeSize)
+        return errno_to_fs_result();
 
     return FS_RESULT_SUCCESS;
 }

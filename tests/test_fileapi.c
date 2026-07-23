@@ -26,7 +26,15 @@ int main() {
 
     // Test creating a file
     FileHandle* createHandle = NULL;
-    result = file_open(&createHandle, "test_create.txt", FILE_MODE_READ, FILE_FLAG_CREATE);
+    result = file_open(&createHandle, "test_create.txt", FILE_MODE_WRITE, FILE_FLAG_CREATE);
+    if (result != FS_RESULT_SUCCESS) {
+        eprintln("Error: {}", fs_result_to_string(result));
+        return -1;
+    }
+
+    // Write contents
+    char content[] = "Contents written from test_fileapi";
+    result = file_write(createHandle, sizeof(content) - 1, content);
     if (result != FS_RESULT_SUCCESS) {
         eprintln("Error: {}", fs_result_to_string(result));
         return -1;

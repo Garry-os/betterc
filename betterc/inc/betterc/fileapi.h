@@ -86,6 +86,15 @@ FS_RESULT file_open(FileHandle** handle, const char* path, FileMode modes, FileF
 FS_RESULT file_read(FileHandle* handle, usize readSize, void* buffer);
 
 /**
+ * @brief Writes to a file.
+ *
+ * @param[in] handle File handle.
+ * @param[in] writeSize Amount of bytes to write.
+ * @param[in] buffer The input buffer.
+ */
+FS_RESULT file_write(FileHandle* handle, usize writeSize, void* buffer);
+
+/**
  * @brief Get a file size.
  *
  * @param[in] handle File handle.
