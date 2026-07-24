@@ -67,46 +67,7 @@ void* vector_get(Vector* buffer, usize index) {
     return (void*)((u8*)buffer->data + index * buffer->elementSize);
 }
 
-void vector_pushfloat(Vector* buffer, float value) {
-    vector_push_impl(buffer, &value);
-}
 
-void vector_pushdouble(Vector* buffer, double value) {
-    vector_push_impl(buffer, &value);
-}
-
-// Unsigned integers
-void vector_pushu8(Vector* buffer, u8 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushu16(Vector* buffer, u16 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushu32(Vector* buffer, u32 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushu64(Vector* buffer, u64 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushi8(Vector* buffer, i8 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushi16(Vector* buffer, i16 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushi32(Vector* buffer, i32 value) {
-    vector_push_impl(buffer, &value);
-}
-
-void vector_pushi64(Vector* buffer, i64 value) {
-    vector_push_impl(buffer, &value);
-}
 
 void vector_reserve(Vector* buffer, usize growthAmount) {
 	grow_buffer_amount(buffer, growthAmount);

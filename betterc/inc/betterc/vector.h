@@ -11,21 +11,49 @@ typedef struct {
 #define vector_getv(type, buffer, index) (*(type*)vector_get(buffer, index))
 #define v_type(type) (sizeof(type))
 
-// Generic types functions
-void vector_pushfloat(Vector* buffer, float value);
-void vector_pushdouble(Vector* buffer, double value);
+void vector_push_impl(Vector* buffer, const void* content);
+
+// Generic types
+static inline void vector_pushfloat(Vector* buffer, float value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushdouble(Vector* buffer, double value) {
+    vector_push_impl(buffer, &value);
+}
 
 // Unsigned integers
-void vector_pushu8(Vector* buffer, u8 value);
-void vector_pushu16(Vector* buffer, u16 value);
-void vector_pushu32(Vector* buffer, u32 value);
-void vector_pushu64(Vector* buffer, u64 value);
+static inline void vector_pushu8(Vector* buffer, u8 value) {
+    vector_push_impl(buffer, &value);
+}
 
-// Signed integers
-void vector_pushi8(Vector* buffer, i8 value);
-void vector_pushi16(Vector* buffer, i16 value);
-void vector_pushi32(Vector* buffer, i32 value);
-void vector_pushi64(Vector* buffer, i64 value);
+static inline void vector_pushu16(Vector* buffer, u16 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushu32(Vector* buffer, u32 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushu64(Vector* buffer, u64 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushi8(Vector* buffer, i8 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushi16(Vector* buffer, i16 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushi32(Vector* buffer, i32 value) {
+    vector_push_impl(buffer, &value);
+}
+
+static inline void vector_pushi64(Vector* buffer, i64 value) {
+    vector_push_impl(buffer, &value);
+}
 
 // _Generic macros
 #define vector_push(buffer, value) _Generic((value), \
@@ -47,6 +75,5 @@ Vector vector_new_reserve(usize elementSize, usize reservedSize);
 void vector_free(Vector* buffer);
 
 // Methods
-void vector_push_impl(Vector* buffer, const void* content);
 void* vector_get(Vector* buffer, usize index);
 void vector_reserve(Vector* buffer, usize growthAmount);
