@@ -5,17 +5,23 @@
 // 64 bytes
 #define DEFAULT_ELEMENT_ALLOC (16)
 
-Vector vector_new(usize elementSize) {
-    Vector buffer;
+Vector vector_new_reserve(usize elementSize, usize reservedSize) {
+	Vector buffer;
     // Allocate memory
-    buffer.capacity = DEFAULT_ELEMENT_ALLOC;
+    buffer.capacity = reservedSize + DEFAULT_ELEMENT_ALLOC;
     buffer.data = (void*)malloc(buffer.capacity * elementSize);
     if (!buffer.data) {
         return (Vector){ 0, 0, 0, 0 };
     }
 
-    buffer.size = 0;
+    buffer.size = reservedSize;
     buffer.elementSize = elementSize;
+
+    return buffer;
+}
+
+Vector vector_new(usize elementSize) {
+    Vector buffer = vector_new_reserve(elementSize, 0);
 
     return buffer;
 }

@@ -43,6 +43,7 @@ void vector_pushi64(Vector* buffer, i64 value);
 )(buffer, value)
 
 Vector vector_new(usize elementSize);
+Vector vector_new_reserve(usize elementSize, usize reservedSize);
 void vector_free(Vector* buffer);
 
 // Methods
