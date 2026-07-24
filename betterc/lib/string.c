@@ -158,13 +158,14 @@ void string_clear(String* string) {
 }
 
 char string_at(const String* string, usize index) {
-    return string->data[index];
+	if (index > string->size)
+		return 0;
+
+	return string->data[index];
 }
 
-void string_reserve(String* string, usize newCapacity) {
-    if (newCapacity < string->size)
-        return;
-    expand_string_array(string, newCapacity);
+void string_reserve(String* string, usize growthAmount) {
+    expand_string_array(string, growthAmount);
 }
 
 bool string_contains(const String* string, const char* target) {
