@@ -24,6 +24,22 @@ static void bc_strcpy(char* dst, const char* src) {
     *dst = '\0';
 }
 
+static void bc_strncpy(char* dst, const char* src, usize n) {
+	usize i = 0;
+	while (*src && i < n) {
+		*dst = *src;
+		src++;
+		dst++;
+		i++;
+	}
+
+	while (i < n) {
+		*dst = '\0';
+		dst++;
+		i++;
+	}
+}
+
 static int bc_strncmp(const char* a, const char* b, usize count) {
     if (count == 0) return 0;
 
@@ -103,7 +119,7 @@ void string_append_count(String* string, const char* content, usize count) {
     expand_string_array(string, count + DEFAULT_CHARS_ALLOC);
     string->size += count;
 
-    bc_strcpy(string->data + originalSize, content);
+	bc_strncpy(string->data + originalSize, content, count);
 }
 
 String string_clone(const String* src) {
@@ -165,4 +181,3 @@ bool string_contains(const String* string, const char* target) {
 
     return false;
 }
-
