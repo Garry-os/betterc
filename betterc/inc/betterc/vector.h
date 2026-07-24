@@ -48,3 +48,4 @@ void vector_free(Vector* buffer);
 // Methods
 void vector_push_impl(Vector* buffer, const void* content);
 void* vector_get(Vector* buffer, usize index);
+void vector_reserve(Vector* buffer, usize growthAmount);

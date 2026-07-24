@@ -13,5 +13,8 @@ int main() {
     for (usize i = 0; i < buffer.size; i++)
         printf("%f\n", vector_getv(float, &buffer, i));
 
+    Vector reservedBuffer = vector_new(v_type(int));
+    vector_reserve(&reservedBuffer, 10);
+
     return 0;
 }

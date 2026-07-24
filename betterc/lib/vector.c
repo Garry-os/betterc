@@ -31,16 +31,20 @@ void vector_free(Vector* buffer) {
     buffer->elementSize = 0;
 }
 
+static void grow_buffer_amount(Vector* buffer, usize growthAmount) {
+	buffer->capacity += growthAmount;
+	void* data = (void*)realloc(buffer->data, buffer->capacity * buffer->elementSize);
+	if (!data)
+		return;
+	buffer->data = data;
+}
+
 // Only grows if needed
 static void grow_buffer(Vector* buffer) {
     if (buffer->size < buffer->capacity)
         return;
 
-    buffer->capacity += DEFAULT_ELEMENT_ALLOC;
-    void* data = (void*)realloc(buffer->data, buffer->capacity * buffer->elementSize);
-    if (!data)
-        return;
-    buffer->data = data;
+    grow_buffer_amount(buffer, DEFAULT_ELEMENT_ALLOC);
 }
 
 void vector_push_impl(Vector* buffer, const void* content) {
@@ -96,4 +100,8 @@ void vector_pushi32(Vector* buffer, i32 value) {
 
 void vector_pushi64(Vector* buffer, i64 value) {
     vector_push_impl(buffer, &value);
+}
+
+void vector_reserve(Vector* buffer, usize growthAmount) {
+	grow_buffer_amount(buffer, growthAmount);
 }
